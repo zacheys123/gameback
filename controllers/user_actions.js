@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
 
 export const update_user = async (req, res) => {
-	let { userId, ...alldata } = req;
+	let { userId, ...alldata } = req.body;
 
 	let passw = alldata?.prevData?.current.password;
 
