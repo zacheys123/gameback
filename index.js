@@ -3,11 +3,12 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
-import userRoutes from './routes/user.js';
+
 import userActions from './routes/user_actions.js';
 import quickMatch from './routes/quickgame.js';
 import standings from './routes/fetch_Standings.js';
 import fixtures from './routes/fetchFixtures.js';
+import adminRoutes from './routes/admin.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 dotenv.config();
@@ -32,7 +33,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use('/', standings);
 app.use('/', fixtures);
-app.use('/users', userRoutes);
+app.use('/', adminRoutes);
+
 app.use('/user/v2', userActions);
 app.use('/game', quickMatch);
 app.use('/user/v2', userActions);

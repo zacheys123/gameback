@@ -25,7 +25,7 @@ export const update_user = async (req, res) => {
 					$set: {
 						username: alldata?.prevData?.current.username,
 						email: alldata?.prevData?.current.email,
-						bsname: alldata?.prevData?.current.bsname,
+						company: alldata?.prevData?.current.company,
 						marital: alldata?.prevData?.current.marital,
 						occupation: alldata?.prevData?.current.occupation,
 						city: alldata?.prevData?.current.city,
@@ -65,7 +65,7 @@ export const get_user = async (req, res) => {
 
 export const update_plan = async (req, res, next) => {
 	const { userId, free } = req.body;
-	console.log(userId);
+	console.log(req.body);
 	try {
 		const user = await User.updateOne(
 			{ _id: userId },

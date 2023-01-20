@@ -32,8 +32,8 @@ const UserSchema = mongoose.Schema(
 		package: { type: String },
 		marital: { type: String, max: 50 },
 		occupation: { type: String, max: 50 },
-		bsname: { type: String },
-		birthdate: { type: String },
+		company: { type: String },
+		phone: { type: String },
 		games: [
 			{
 				player1_team: {
