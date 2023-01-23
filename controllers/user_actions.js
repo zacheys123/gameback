@@ -76,7 +76,10 @@ export const update_plan = async (req, res, next) => {
 				},
 			},
 		);
-		res.status(200).json('Successfully Chose A package');
+		res.status(200).json({
+			message: 'Successfully Chose A package',
+			result: user,
+		});
 	} catch (error) {
 		res.status(500).json(error);
 	}
