@@ -1,6 +1,7 @@
 import User from '../models/user.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { sendEmail } from '../utils/sendEmail.js';
 export const register = async (req, res) => {
 	const {
 		firstname,
@@ -44,7 +45,8 @@ export const register = async (req, res) => {
 		});
 
 	const newUser = new User({
-		username: `${firstname}${lastname}`,
+		firstname,
+		lastname,
 		email,
 		company,
 		phone,
@@ -52,36 +54,41 @@ export const register = async (req, res) => {
 	});
 	// hashing the password
 
-	const savedUser = await newUser.save();
+	const savedAdmin = await newUser.save();
 
-	if (savedUser) {
+	if (savedAdmin) {
 		const token = jwt.sign(
-			{ email: savedUser.username, id: savedUser._id },
+			{ email: savedAdmin.username, id: savedAdmin._id },
 			process.env.JWT_SECRET,
 			{ expiresIn: process.env.JWT_EXPIRE },
 		);
-		// const {
-		// 	password,
-		// 	movies,
-		// 	latest,
-		// 	suggested,
-		// 	users,
-		// 	upddatedAt,
-		// 	createdAt,
-		// 	...rest
-		// } = savedUser._doc;
+		const send_to = email;
+		const send_from = process.env.EMAIL;
+		const subject = 'Welcome to MovieHubz';
+		const message = `
+		<h2>Hello there ${firstname}</h2>
+		<br />
+		<p>Welcome to the most popular and used Gamin platform for  managing and accounting your game data.</p>
+		<p>By getting this confirmation email it shows you have registered successfully.</p><span>On the website you're already navigated to the package page,Choose A package That suits you better Free,Amateur,World(recomended),Premium(recomended),and you will be able to access Gamehubz.</span>
+<p>We are happy to welcome you to our family,enjoy everything about gamehubz.
+You will be sent reminders and notifications of any updates or promotions.</p>
+<h5>Regards from:</h5>
+<h6>Zacharia Muigai,<span style={{color:'red',fontWeight:'bold',fontSize:'.9rem}}>Head of Technology</span></h6>
+		`;
+		await sendEmail(subject, send_to, send_from, message);
+		console.log('Email Sent');
 		return res.status(200).json({
 			message: 'Successfully registered',
-			result: savedUser,
+			result: savedAdmin,
 			token,
 		});
 	}
 };
 export const login = async (req, res) => {
 	const { email, password } = req.body;
-
+	console.log(req.body);
 	try {
-		const result = await User.findOne({ email: email });
+		const result = await Admin.findOne({ email: email });
 
 		if (!result) {
 			res.status(404).json({ message: 'User Not Found' });
@@ -110,4 +117,4 @@ export const login = async (req, res) => {
 		console.log(error.message);
 	}
 };
-export const getUsers = async () => {};
+export const getAdmins = async () => {};

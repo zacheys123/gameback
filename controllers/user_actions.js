@@ -84,3 +84,71 @@ export const update_plan = async (req, res, next) => {
 		res.status(500).json(error);
 	}
 };
+export const update_pass = async (req, res) => {
+	let { userId, ...alldata } = req.body;
+
+	let passw = alldata?.prevAuth?.current.password;
+
+	if (userId === req.params.id || req.body.isAdmin) {
+		if (passw) {
+			try {
+				const salt = await bcrypt.genSalt(10);
+				passw = await bcrypt.hash(passw, salt);
+			} catch (err) {
+				return res.status(500).json(err);
+			}
+		}
+		console.log(alldata.prevAuth.current);
+		try {
+			if (
+				alldata?.prevAuth?.current.password &&
+				alldata?.prevAuth?.current.confirmpassword
+			) {
+				if (
+					alldata?.prevAuth?.current.password ===
+					alldata?.prevAuth?.current.confirmpassword
+				) {
+					if (
+						alldata?.prevAuth?.current.password.length > 6 &&
+						alldata?.prevAuth?.current.confirmpassword.length > 6
+					) {
+						const user = await Admin.updateOne(
+							{ _id: userId },
+
+							{
+								$set: {
+									password: passw,
+								},
+							},
+						);
+						return res.status(200).json({
+							message: 'Password Changed Successfuly',
+							result: user,
+						});
+					} else {
+						return res.status(400).json({
+							sucess: false,
+							message: 'Password should have more than 6 characters',
+						});
+					}
+				} else {
+					return res.status(400).json({
+						sucess: false,
+						message:
+							'Both passwords should match,confirm password and try again',
+					});
+				}
+			} else {
+				return res.status(400).json({
+					message: 'All fields should be entered',
+					success: false,
+				});
+			}
+		} catch (error) {
+			console.log(error);
+			res.status(500).json(error);
+		}
+	} else {
+		return res.status(403).json('Update your Account Only');
+	}
+};
