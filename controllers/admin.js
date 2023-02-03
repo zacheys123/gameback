@@ -6,11 +6,15 @@ export const register = async (req, res) => {
 	const {
 		firstname,
 		lastname,
-		email,
 		company,
+		company_type,
+		phone1,
+		state,
 		phone,
+		email,
 		password,
 		confirmpassword,
+		username,
 	} = req.body;
 
 	if (!email || !password)
@@ -47,10 +51,15 @@ export const register = async (req, res) => {
 	const newUser = new User({
 		firstname,
 		lastname,
-		email,
 		company,
+		company_type,
+		phone1,
+		state,
 		phone,
+		email,
 		password,
+		confirmpassword,
+		username,
 	});
 	// hashing the password
 
@@ -64,7 +73,7 @@ export const register = async (req, res) => {
 		);
 		const send_to = email;
 		const send_from = process.env.EMAIL;
-		const subject = 'Welcome to MovieHubz';
+		const subject = 'Welcome to GameHubz';
 		const message = `
 		<h2>Hello there ${firstname}</h2>
 		<br />
