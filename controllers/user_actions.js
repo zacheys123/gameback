@@ -5,18 +5,7 @@ import mongoose from 'mongoose';
 export const update_user = async (req, res) => {
 	let { userId, ...alldata } = req.body;
 
-	let passw = alldata?.prevData?.current.password;
-
 	if (userId === req.params.id || req.body.isAdmin) {
-		if (passw) {
-			try {
-				const salt = await bcrypt.genSalt(10);
-				passw = await bcrypt.hash(passw, salt);
-			} catch (err) {
-				return res.status(500).json(err);
-			}
-		}
-
 		try {
 			const user = await User.updateOne(
 				{ _id: userId },
@@ -26,10 +15,13 @@ export const update_user = async (req, res) => {
 						username: alldata?.prevData?.current.username,
 						email: alldata?.prevData?.current.email,
 						company: alldata?.prevData?.current.company,
+						company_type: alldata?.prevData?.current.type,
+						state: alldata?.prevData?.current.state,
+						phone: alldata?.prevData?.current.phone,
+						phone1: alldata?.prevData?.current.phone1,
 						marital: alldata?.prevData?.current.marital,
 						occupation: alldata?.prevData?.current.occupation,
 						city: alldata?.prevData?.current.city,
-						password: passw,
 					},
 				},
 			);
