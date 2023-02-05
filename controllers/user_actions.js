@@ -12,16 +12,16 @@ export const update_user = async (req, res) => {
 
 				{
 					$set: {
-						username: alldata?.prevData?.current.username,
-						email: alldata?.prevData?.current.email,
-						company: alldata?.prevData?.current.company,
-						company_type: alldata?.prevData?.current.type,
-						state: alldata?.prevData?.current.state,
-						phone: alldata?.prevData?.current.phone,
-						phone1: alldata?.prevData?.current.phone1,
-						marital: alldata?.prevData?.current.marital,
-						occupation: alldata?.prevData?.current.occupation,
-						city: alldata?.prevData?.current.city,
+						username: alldata?.form?.prevData?.current.username,
+						email: alldata?.form?.prevData?.current.email,
+						company: alldata?.form?.prevData?.current.company,
+						company_type: alldata?.form?.prevData?.current.type,
+						state: alldata?.form?.prevData?.current.state,
+						phone: alldata?.form?.prevData?.current.phone,
+						phone1: alldata?.form?.prevData?.current.phone1,
+						marital: alldata?.form?.prevData?.current.marital,
+						occupation: alldata?.form?.prevData?.current.occupation,
+						city: alldata?.form?.prevData?.current.city,
 					},
 				},
 			);
