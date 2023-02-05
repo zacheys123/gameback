@@ -7,27 +7,44 @@ export const update_user = async (req, res) => {
 
 	if (userId === req.params.id || req.body.isAdmin) {
 		try {
-			const user = await User.updateOne(
-				{ _id: userId },
+			if (
+				alldata?.form?.prevData?.current.username &&
+				alldata?.form?.prevData?.current.email &&
+				alldata?.form?.prevData?.current.company &&
+				alldata?.form?.prevData?.current.type &&
+				alldata?.form?.prevData?.current.state &&
+				alldata?.form?.prevData?.current.phone &&
+				alldata?.form?.prevData?.current.phone1 &&
+				alldata?.form?.prevData?.current.marital &&
+				alldata?.form?.prevData?.current.occupation &&
+				alldata?.form?.prevData?.current.city
+			) {
+				const user = await User.updateOne(
+					{ _id: userId },
 
-				{
-					$set: {
-						username: alldata?.form?.prevData?.current.username,
-						email: alldata?.form?.prevData?.current.email,
-						company: alldata?.form?.prevData?.current.company,
-						company_type: alldata?.form?.prevData?.current.type,
-						state: alldata?.form?.prevData?.current.state,
-						phone: alldata?.form?.prevData?.current.phone,
-						phone1: alldata?.form?.prevData?.current.phone1,
-						marital: alldata?.form?.prevData?.current.marital,
-						occupation: alldata?.form?.prevData?.current.occupation,
-						city: alldata?.form?.prevData?.current.city,
+					{
+						$set: {
+							username: alldata?.form?.prevData?.current.username,
+							email: alldata?.form?.prevData?.current.email,
+							company: alldata?.form?.prevData?.current.company,
+							company_type: alldata?.form?.prevData?.current.type,
+							state: alldata?.form?.prevData?.current.state,
+							phone: alldata?.form?.prevData?.current.phone,
+							phone1: alldata?.form?.prevData?.current.phone1,
+							marital: alldata?.form?.prevData?.current.marital,
+							occupation: alldata?.form?.prevData?.current.occupation,
+							city: alldata?.form?.prevData?.current.city,
+						},
 					},
-				},
-			);
-			return res
-				.status(200)
-				.json({ message: 'Account is Updated', result: user });
+				);
+				return res
+					.status(200)
+					.json({ message: 'Account is Updated', result: user });
+			} else {
+				res
+					.status(400)
+					.json({ message: 'Some Updated Inputs Are Empty' });
+			}
 		} catch (error) {
 			console.log(error);
 			res.status(500).json(error);
@@ -80,17 +97,19 @@ export const update_pass = async (req, res) => {
 	let { userId, ...alldata } = req.body;
 
 	let passw = alldata?.prevAuth?.current.password;
+	let oldpassw = alldata?.prevAuth?.current.oldpassword;
 
 	if (userId === req.params.id || req.body.isAdmin) {
-		if (passw) {
+		if (passw && oldpassw) {
 			try {
 				const salt = await bcrypt.genSalt(10);
 				passw = await bcrypt.hash(passw, salt);
+				oldpassw = await bcrypt.hash(oldpassw, salt);
 			} catch (err) {
 				return res.status(500).json(err);
 			}
 		}
-		console.log(alldata.prevAuth.current);
+		console.log(oldpassw);
 		try {
 			if (
 				alldata?.prevAuth?.current.password &&
@@ -104,19 +123,27 @@ export const update_pass = async (req, res) => {
 						alldata?.prevAuth?.current.password.length > 6 &&
 						alldata?.prevAuth?.current.confirmpassword.length > 6
 					) {
-						const user = await Admin.updateOne(
-							{ _id: userId },
+						const pass = await User.findOne({ password: oldpassw });
+						if (pass) {
+							const user = await User.updateOne(
+								{ _id: userId },
 
-							{
-								$set: {
-									password: passw,
+								{
+									$set: {
+										password: passw,
+									},
 								},
-							},
-						);
-						return res.status(200).json({
-							message: 'Password Changed Successfuly',
-							result: user,
-						});
+							);
+							return res.status(200).json({
+								message: 'Password Changed Successfuly',
+								result: user,
+							});
+						} else {
+							return res.status(400).json({
+								sucess: false,
+								message: "You've entered the wrong old password'",
+							});
+						}
 					} else {
 						return res.status(400).json({
 							sucess: false,
