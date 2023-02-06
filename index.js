@@ -28,8 +28,8 @@ app.use(function (req, res, next) {
 
 app.use(morgan('dev'));
 
-app.use(express.json({ limit: '30mb', extended: true }));
-app.use(express.urlencoded({ limit: '30mb', extended: true }));
+app.use(express.json({ limit: '100mb', extended: true }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
 app.use('/', standings);
 app.use('/', fixtures);
