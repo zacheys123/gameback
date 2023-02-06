@@ -16,10 +16,7 @@ const source = process.env.MONGO_URI;
 const app = express();
 
 app.use(function (req, res, next) {
-	res.setHeader(
-		'Access-Control-Allow-Origin',
-		'https://gaminbackendz.onrender.com,http://localhost:3500',
-	);
+	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader(
 		'Access-Control-Allow-Methods',
 		'GET, POST, DELETE, PUT',
