@@ -109,7 +109,7 @@ export const update_pass = async (req, res) => {
 				return res.status(500).json(err);
 			}
 		}
-		console.log(oldpassw);
+
 		try {
 			if (
 				alldata?.prevAuth?.current.password &&
@@ -123,7 +123,8 @@ export const update_pass = async (req, res) => {
 						alldata?.prevAuth?.current.password.length > 6 &&
 						alldata?.prevAuth?.current.confirmpassword.length > 6
 					) {
-						const pass = await User.findOne({ password: oldpassw });
+						const pass = await User.findOne({ oldpassw });
+
 						if (pass) {
 							const user = await User.updateOne(
 								{ _id: userId },

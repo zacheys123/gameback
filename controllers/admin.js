@@ -2,6 +2,30 @@ import User from '../models/user.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { sendEmail } from '../utils/sendEmail.js';
+export const checkEmail = async (req, res) => {
+	const newemail = req.body.email;
+	const username = req.body.username;
+
+	const user = await User.findOne({ email: newemail });
+	const user1 = await User.findOne({ username });
+	//  finding user in db
+	if (user)
+		return res.status(400).json({
+			success: false,
+			message: 'Email is  already in use',
+		});
+	else if (user1) {
+		return res.status(400).json({
+			success: false,
+			message: 'Username is  already in use',
+		});
+	} else {
+		return res.status(200).json({
+			success: true,
+			message: 'Valid Email',
+		});
+	}
+};
 export const register = async (req, res) => {
 	const {
 		firstname,
@@ -17,16 +41,10 @@ export const register = async (req, res) => {
 		username,
 	} = req.body;
 
-	if (!email || !password)
+	if (password.length < 8) {
 		return res.status(400).json({
 			success: false,
-			message: 'Password and email are required',
-		});
-
-	if (password.length < 6) {
-		return res.status(400).json({
-			success: false,
-			message: 'Password should be at least 6 characters long',
+			message: 'Password should be at least 8 characters long',
 		});
 	}
 	if (password !== confirmpassword) {
@@ -35,18 +53,6 @@ export const register = async (req, res) => {
 			message: 'Both Passwords should match',
 		});
 	}
-
-	const user1 = await User.findOne({ company }); //
-	const user = await User.findOne({ email });
-	//  finding user in db
-	if (user)
-		return res.status(400).json({
-			message: 'Email/username already in use',
-		});
-	if (user1)
-		return res.status(400).json({
-			message: 'Company name already Exist',
-		});
 
 	const newUser = new User({
 		firstname,
@@ -58,7 +64,7 @@ export const register = async (req, res) => {
 		phone,
 		email,
 		password,
-		confirmpassword,
+
 		username,
 	});
 	// hashing the password
@@ -97,7 +103,7 @@ export const login = async (req, res) => {
 	const { email, password } = req.body;
 	console.log(req.body);
 	try {
-		const result = await Admin.findOne({ email: email });
+		const result = await User.findOne({ email: email });
 
 		if (!result) {
 			res.status(404).json({ message: 'User Not Found' });
