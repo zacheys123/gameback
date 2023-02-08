@@ -5,7 +5,7 @@ import { sendEmail } from '../utils/sendEmail.js';
 export const checkEmail = async (req, res) => {
 	const newemail = req.body.email;
 	const username = req.body.username;
-
+	console.log(req.body);
 	const user = await User.findOne({ email: newemail });
 	const user1 = await User.findOne({ username });
 	//  finding user in db
