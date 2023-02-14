@@ -6,31 +6,46 @@ export const update_user = async (req, res) => {
 	let { userId, ...alldata } = req.body;
 
 	if (userId === req.params.id || req.body.isAdmin) {
-		try {
-			const user = await User.updateOne(
-				{ _id: userId },
+		if (
+			alldata?.form?.prevData?.current?.firstname &&
+			alldata?.form?.prevData?.current?.lastname &&
+			alldata?.form?.prevData?.current?.username &&
+			alldata?.form?.prevData?.current.company
+		) {
+			try {
+				const user = await User.updateOne(
+					{ _id: userId },
 
-				{
-					$set: {
-						username: alldata?.form?.prevData?.current.username,
-						email: alldata?.form?.prevData?.current.email,
-						company: alldata?.form?.prevData?.current.company,
-						company_type: alldata?.form?.prevData?.current.type,
-						state: alldata?.form?.prevData?.current.state,
-						phone: alldata?.form?.prevData?.current.phone,
-						phone1: alldata?.form?.prevData?.current.phone1,
-						marital: alldata?.form?.prevData?.current.marital,
-						occupation: alldata?.form?.prevData?.current.occupation,
-						city: alldata?.form?.prevData?.current.city,
+					{
+						$set: {
+							firstname: alldata?.form?.prevData?.current.firstnam,
+							lastname: alldata?.form?.prevData?.current.lastname,
+							username: alldata?.form?.prevData?.current.username,
+							email: alldata?.form?.prevData?.current.email,
+							company: alldata?.form?.prevData?.current.company,
+							company_type: alldata?.form?.prevData?.current.type,
+							state: alldata?.form?.prevData?.current.state,
+							phone: alldata?.form?.prevData?.current.phone,
+							phone1: alldata?.form?.prevData?.current.phone1,
+							marital: alldata?.form?.prevData?.current.marital,
+							occupation: alldata?.form?.prevData?.current.occupation,
+							city: alldata?.form?.prevData?.current.city,
+						},
 					},
-				},
-			);
+				);
+				return res
+					.status(200)
+					.json({ message: 'Account is Updated', result: user });
+			} catch (error) {
+				console.log(error);
+				res.status(500).json(error);
+			}
+		} else {
 			return res
-				.status(200)
-				.json({ message: 'Account is Updated', result: user });
-		} catch (error) {
-			console.log(error);
-			res.status(500).json(error);
+				.status(403)
+				.json(
+					'Some fieds cannot be Empty,please check and try again',
+				);
 		}
 	} else {
 		return res.status(403).json('Update your Account Only');

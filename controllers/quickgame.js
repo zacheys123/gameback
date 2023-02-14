@@ -2,15 +2,20 @@ import User from '../models/user.js';
 
 export const createGame = async (req, res, next) => {
 	const {
-		player1,
-		player2,
-		player1_team,
-		player2_team,
-		telno1,
-		telno2,
-		station,
+		player_data: {
+			player1,
+			player2,
+			player1_team,
+			player2_team,
+			telno1,
+			telno2,
+			station,
+
+			best_amount,
+		},
+		info,
 	} = req.body;
-	console.log(req.body.extra_data.p1goals);
+	console.log(req.body.info);
 	try {
 		const newUser = await User.findById(req.params.id);
 		await newUser.updateOne({
@@ -23,11 +28,12 @@ export const createGame = async (req, res, next) => {
 					telno1,
 					telno2,
 					station,
-					p1goals: req.body.extra_data?.p1goals,
-					p2goals: req.body.extra_data?.p2goals,
-					amount: req.body.extra_data?.amount,
-					paid: req.body.extra_data?.paid,
-					outcome: req.body.extra_data?.outcome,
+					p1goals: req.body.player_data?.extra_data?.p1goals,
+					p2goals: req.body.player_data?.extra_data?.p2goals,
+					amount: req.body.player_data?.extra_data?.amount,
+					paid: req.body.player_data?.extra_data?.paid,
+					outcome: info + req.body.player_data?.extra_data?.outcome,
+					best_amount: req.body.player_data?.extra_data?.best_amount,
 				},
 			},
 		});

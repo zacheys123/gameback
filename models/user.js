@@ -79,6 +79,14 @@ const UserSchema = mongoose.Schema(
 				outcome: {
 					type: String,
 				},
+
+				best_amount: {
+					type: String,
+				},
+				penalty_amount: {
+					type: String,
+				},
+
 				_id: {
 					type: String,
 				},
