@@ -97,6 +97,19 @@ const UserSchema = mongoose.Schema(
 				},
 			},
 		],
+		tournament: [
+			{
+				facilitator: { type: String },
+				tourn_name: { type: String },
+				type: { type: String },
+				noplayers: { type: String },
+				amount: { type: String },
+				winner: { type: String },
+				second_runnerup: { type: String },
+				third: { type: String },
+				total: { type: String },
+			},
+		],
 
 		resetpassortoken: String,
 		requiredresetpasswordexpire: Date,

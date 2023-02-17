@@ -10,40 +10,92 @@ export const createGame = async (req, res, next) => {
 			telno1,
 			telno2,
 			station,
-
-			best_amount,
 		},
 		info,
 	} = req.body;
-	console.log(req.body.info);
+	console.log(req.body);
+	const matchno = /^[0-9]*$/;
 	try {
-		const newUser = await User.findById(req.params.id);
-		await newUser.updateOne({
-			$push: {
-				games: {
-					player1_team,
-					player1,
-					player2_team,
-					player2,
-					telno1,
-					telno2,
-					station,
-					p1goals: req.body.player_data?.extra_data?.p1goals,
-					p2goals: req.body.player_data?.extra_data?.p2goals,
-					amount: req.body.player_data?.extra_data?.amount,
-					paid: req.body.player_data?.extra_data?.paid,
-					outcome: info + req.body.player_data?.extra_data?.outcome,
-					best_amount: req.body.player_data?.extra_data?.best_amount,
+		if (
+			req.body.player_data?.extra_data?.p1goals.match &&
+			req.body.player_data?.extra_data?.p2goals.match
+		) {
+			const newUser = await User.findById(req.params.id);
+			await newUser.updateOne({
+				$push: {
+					games: {
+						player1_team,
+						player1,
+						player2_team,
+						player2,
+						telno1,
+						telno2,
+						station,
+						p1goals: req.body.player_data?.extra_data?.p1goals,
+						p2goals: req.body.player_data?.extra_data?.p2goals,
+						amount: req.body.player_data?.extra_data?.amount,
+						paid: req.body.player_data?.extra_data?.paid,
+						outcome:
+							info.current +
+							req.body.player_data?.extra_data?.outcome,
+						best_amount:
+							req.body.player_data?.extra_data?.best_amount,
+						penalty_amount:
+							req.body.player_data?.extra_data?.penalty_amount,
+					},
 				},
-			},
-		});
+			});
 
-		res.status(200).json('Game Successfully Added');
+			res.status(200).json({ message: 'Game Successfully Added' });
+		} else {
+			res.status(200).json({
+				message: 'All fields are needed,Only tel no(optional)',
+			});
+		}
 	} catch (error) {
+		console.log(error.message);
 		res.status(500).json(error);
 	}
 };
 
+//
+// create tournament
+export const createTournament = async (req, res, next) => {
+	const { facilitator, tourn_name, type, noplayers, amount } =
+		req.body;
+	console.log(req.body);
+	const matchno = /^[0-9]*$/;
+	try {
+		if (facilitator && tourn_name && type && noplayers && amount) {
+			const newUser = await User.findById(req.params.id);
+			await newUser.updateOne({
+				$push: {
+					tournament: {
+						facilitator,
+						tourn_name,
+						type,
+						noplayers,
+						amount,
+					},
+				},
+			});
+
+			res
+				.status(200)
+				.json({ message: 'Tournament Successfully Registered' });
+		} else {
+			res.status(400).json({
+				message:
+					'No Empty Inputs allowed,check your inputs and try again',
+			});
+		}
+	} catch (error) {
+		console.log(error.message);
+		res.status(500).json(error);
+	}
+};
+
+//
 export const getGame = async (req, res, next) => {
 	const curr = await User.findById(req.params.id);
 	return res.status(200).json({ success: true, result: curr.games });

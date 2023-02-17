@@ -12,6 +12,10 @@ import adminRoutes from './routes/admin.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 dotenv.config();
+// import { logger } from './middleware/logger.js';
+// import { errorHandler } from './middleware/errorHandler.js';
+// import { corsOptions } from './config/corsOptions.js';
+// import cookieParser from 'cookie-parser';
 const source = process.env.MONGO_URI;
 const app = express();
 
@@ -30,7 +34,7 @@ app.use(morgan('dev'));
 
 app.use(express.json({ limit: '100mb', extended: true }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
-
+// app.use(cookieParser);
 app.use('/', standings);
 app.use('/', fixtures);
 app.use('/', adminRoutes);
@@ -59,6 +63,7 @@ const db = mongoose.connection;
 
 db.on('error', (err) => console.log(err.message));
 db.once('open', () => console.log('Mongoose is connected'));
+
 // app.use(express.static(path.join(__dirname, '/')));
 
 // if (process.env.NODE_ENV === 'production') {

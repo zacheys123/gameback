@@ -26,6 +26,7 @@ export const checkEmail = async (req, res) => {
 		});
 	}
 };
+
 export const register = async (req, res) => {
 	const {
 		firstname,
@@ -103,30 +104,52 @@ export const login = async (req, res) => {
 	const { email, password } = req.body;
 	console.log(req.body);
 	try {
-		const result = await User.findOne({ email: email });
+		if (email && password) {
+			const result = await User.findOne({ email: email });
 
-		if (!result) {
-			res.status(404).json({ message: 'User Not Found' });
-		}
-		let matchpass = await bcrypt.compare(password, result.password);
-		if (matchpass) {
-			return jwt.sign(
-				{ username: result.username, id: result._id },
-				process.env.JWT_SECRET,
-				{ expiresIn: process.env.JWT_EXPIRE },
-				(err, token) => {
-					res.status(200).json({
-						success: true,
-						message: 'You have logged in successfully',
-						result,
-						token,
-					});
-				},
-			);
+			if (!result) {
+				res.status(404).json({ message: 'User Not Found' });
+			}
+			let matchpass = await bcrypt.compare(password, result.password);
+			if (matchpass) {
+				const send_to = email;
+				const send_from = process.env.EMAIL;
+				const subject = 'GameHubz Cloud';
+				const message = `
+		<h2>Successful sign-in ${email}</h2>
+		<br />
+		<h3 style={{color:'cyan',fontWeight:'bold'}}>GameHubz Co</h3>
+<p>This email is to verify that you have logged in for ${email}</p>
+<p>Date:${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+<p>If you're aware of this sign-in,you can continue to access and use gamehubz </p>
+<h5>Regards from:</h5>
+<h6>Zacharia Muigai,<span style={{color:'red',fontWeight:'bold',fontSize:'.9rem}}>Head of Technology</span></h6>
+		`;
+				await sendEmail(subject, send_to, send_from, message);
+				console.log('Email Sent');
+				return jwt.sign(
+					{ username: result.username, id: result._id },
+					process.env.JWT_SECRET,
+					{ expiresIn: process.env.JWT_EXPIRE },
+					(err, token) => {
+						res.status(200).json({
+							success: true,
+							message: 'You have logged in successfully',
+							result,
+							token,
+						});
+					},
+				);
+			} else {
+				return res
+					.status(400)
+					.json({ success: false, message: 'Invalid password' });
+			}
 		} else {
-			return res
-				.status(400)
-				.json({ success: false, message: 'Invalid password' });
+			return res.status(400).json({
+				success: false,
+				message: 'All fields Should be Entered',
+			});
 		}
 	} catch (error) {
 		console.log(error.message);

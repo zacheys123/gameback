@@ -18,7 +18,7 @@ export const update_user = async (req, res) => {
 
 					{
 						$set: {
-							firstname: alldata?.form?.prevData?.current.firstnam,
+							firstname: alldata?.form?.prevData?.current.firstname,
 							lastname: alldata?.form?.prevData?.current.lastname,
 							username: alldata?.form?.prevData?.current.username,
 							email: alldata?.form?.prevData?.current.email,
