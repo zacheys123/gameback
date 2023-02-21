@@ -64,8 +64,6 @@ export const delete_user = async (req, res) => {
 };
 
 export const get_user = async (req, res) => {
-	const { userId } = req.body;
-	console.log(userId);
 	const user = await User.findById(req.params.id);
 	res.status(200).json(user);
 };
