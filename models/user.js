@@ -15,7 +15,6 @@ const UserSchema = mongoose.Schema(
 		email: {
 			type: String,
 
-			unique: true,
 			match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/],
 		},
 		password: {
@@ -97,15 +96,16 @@ const UserSchema = mongoose.Schema(
 				},
 			},
 		],
+		tourn: { type: String },
 		tournament: [
 			{
 				facilitator: { type: String },
-				tourn_name: { type: String },
+				tournname: { type: String },
 				type: { type: String },
 				noplayers: { type: String },
 				amount: { type: String },
 				winner: { type: String },
-				second_runnerup: { type: String },
+				second: { type: String },
 				third: { type: String },
 				total: { type: String },
 			},

@@ -53,17 +53,49 @@ export const createGame = async (req, res, next) => {
 			});
 		}
 	} catch (error) {
-		console.log(error.message);
+		res.status(400).json({
+			message: error.message,
+		});
 		res.status(500).json(error);
 	}
 };
 
 //
+export const tournName = async (req, res) => {
+	const { tourn_name } = req.body;
+
+	try {
+		if (tourn_name) {
+			const newUser = await User.findById(req.params.id);
+			await newUser.updateOne({
+				$set: {
+					tourn: tourn_name,
+				},
+			});
+
+			res.status(200).json({ message: 'done' });
+		} else {
+			res.status(400).json({
+				message:
+					'No Empty Inputs allowed,check your inputs and try again',
+			});
+		}
+	} catch (error) {
+		console.log(error.message);
+		res.status(400).json({
+			message: error.message,
+		});
+		res.status(400).json({
+			message: error.message,
+		});
+		res.status(500).json(error);
+	}
+};
 // create tournament
 export const createTournament = async (req, res, next) => {
 	const { facilitator, tourn_name, type, noplayers, amount } =
 		req.body;
-	console.log(req.body);
+
 	const matchno = /^[0-9]*$/;
 	try {
 		if (facilitator && tourn_name && type && noplayers && amount) {
@@ -72,7 +104,7 @@ export const createTournament = async (req, res, next) => {
 				$push: {
 					tournament: {
 						facilitator,
-						tourn_name,
+						tournname: tourn_name,
 						type,
 						noplayers,
 						amount,
