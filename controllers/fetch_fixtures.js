@@ -1,21 +1,18 @@
 import axios from 'axios';
 export const fetchFixtures = async (req, res) => {
-	let queryDate = new Date(
-		+req.params.year,
-		+req.params.month - 1,
-		+req.params.day,
-	);
+	const year = req.query.season;
+	const standings = req.query.league;
+	const dat = req.query.date;
+
 	const options = {
 		method: 'GET',
-		url:
-			'https://api-football-v1.p.rapidapi.com/v2/fixtures/date/' +
-			queryDate,
+		url: 'https://api-football-v1.p.rapidapi.com/v3/fixtures',
+		params: { date: dat, league: standings, season: year },
 		headers: {
-			'X-RapidAPI-Key': process.env.REACT_APP_RAPID_STANDINGS_KEY,
+			'X-RapidAPI-Key': process.env.REACT_APP_FIXTURES,
 			'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com',
 		},
 	};
-
 	try {
 		let resp = await axios.request(options);
 		return res.json(resp.data);
