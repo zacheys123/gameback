@@ -23,7 +23,8 @@ export const update_user = async (req, res) => {
 							username: alldata?.form?.prevData?.current.username,
 							email: alldata?.form?.prevData?.current.email,
 							company: alldata?.form?.prevData?.current.company,
-							company_type: alldata?.form?.prevData?.current.type,
+							company_type:
+								alldata?.form?.prevData?.current.company_type,
 							state: alldata?.form?.prevData?.current.state,
 							phone: alldata?.form?.prevData?.current.phone,
 							phone1: alldata?.form?.prevData?.current.phone1,
