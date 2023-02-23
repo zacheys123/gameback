@@ -94,8 +94,8 @@ export const update_pass = async (req, res) => {
 	let { userId, ...alldata } = req.body;
 
 	let passw = alldata?.prevAuth?.current.password;
-	let password = alldata?.prevAuth?.current.oldpassword;
 
+	console.log(alldata);
 	if (userId === req.params.id || req.body.isAdmin) {
 		if (passw) {
 			try {
@@ -119,39 +119,15 @@ export const update_pass = async (req, res) => {
 						alldata?.prevAuth?.current.password.length > 6 &&
 						alldata?.prevAuth?.current.confirmpassword.length > 6
 					) {
-						const pass = await User.findOne({ password: password });
-						console.log(pass);
-						if (pass) {
-							let matchpass = await bcrypt.compare(
-								password,
-								pass.password,
-							);
-							if (matchpass) {
-								const user = await User.updateOne(
-									{ _id: userId },
+						const user = await User.updateOne(
+							{ _id: userId },
+							{ $set: { passw } },
+						);
 
-									{
-										$set: {
-											password: passw,
-										},
-									},
-								);
-								return res.status(200).json({
-									message: 'Password Changed Successfuly',
-									result: user,
-								});
-							} else {
-								return res.status(400).json({
-									sucess: false,
-									message: "You've entered the wrong old password'",
-								});
-							}
-						} else {
-							return res.status(400).json({
-								sucess: false,
-								message: "You've entered the wrong old password'",
-							});
-						}
+						return res.status(200).json({
+							message: 'Password Changed Successfuly',
+							result: user,
+						});
 					} else {
 						return res.status(400).json({
 							sucess: false,

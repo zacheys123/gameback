@@ -96,6 +96,8 @@ const UserSchema = mongoose.Schema(
 				},
 			},
 		],
+		secret: { type: String },
+		secret_question: { type: String },
 		tourn: { type: String },
 		tournament: [
 			{

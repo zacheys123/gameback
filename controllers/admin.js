@@ -65,7 +65,7 @@ export const register = async (req, res) => {
 		phone,
 		email,
 		password,
-
+		secret,
 		username,
 	});
 	// hashing the password
