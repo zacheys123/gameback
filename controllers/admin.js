@@ -40,6 +40,8 @@ export const register = async (req, res) => {
 		password,
 		confirmpassword,
 		username,
+		secret,
+		secret_question,
 	} = req.body;
 
 	if (password.length < 8) {
@@ -66,6 +68,7 @@ export const register = async (req, res) => {
 		email,
 		password,
 		secret,
+		secret_question,
 		username,
 	});
 	// hashing the password
