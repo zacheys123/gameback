@@ -1,21 +1,15 @@
+import User from '../models/user.js';
+import jwt from 'jsonwebtoken';
 export const adminLogin = async (req, res) => {
-	const {
-		adm,
-		adminref: {
-			current: { username, secret, secret_question },
-		},
-	} = req.body;
+	const { username, secret, secret_question } = req.body;
 	console.log(username);
 	try {
 		if (username && secret && secret_question) {
-			const result = await User.findOne(
-				{ _id: adm },
-				{
-					username,
-					secret,
-					secret_question,
-				},
-			);
+			const result = await User.findOne({
+				username,
+				secret,
+				secret_question,
+			});
 
 			if (!result) {
 				res
