@@ -127,6 +127,39 @@ export const createTournament = async (req, res, next) => {
 	}
 };
 
+// // create tournament
+export const createFinalTourn = async (req, res, next) => {
+	const { first_runner, second_runner, prize, winner } = req.body;
+
+	const matchno = /^[0-9]*$/;
+	try {
+		if (first_runner && second_runner && prize && winner) {
+			const newUser = await User.findById(req.params.id);
+			await newUser.updateOne({
+				$push: {
+					tournament: {
+						first_runner: first_runner,
+						second_runner: second_runner,
+						winner,
+						prize,
+					},
+				},
+			});
+
+			res.status(200).json({
+				message: `End Of Tournament \n Congratulations ${winner}`,
+			});
+		} else {
+			res.status(400).json({
+				message:
+					'No Empty Inputs allowed,check your inputs and try again',
+			});
+		}
+	} catch (error) {
+		console.log(error.message);
+		res.status(500).json(error);
+	}
+};
 //
 export const getGame = async (req, res, next) => {
 	const curr = await User.findById(req.params.id);

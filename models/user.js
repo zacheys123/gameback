@@ -107,9 +107,9 @@ const UserSchema = mongoose.Schema(
 				noplayers: { type: String },
 				amount: { type: String },
 				winner: { type: String },
-				second: { type: String },
-				third: { type: String },
-				total: { type: String },
+				second_runner: { type: String },
+				first_runner: { type: String },
+				prize: { type: String },
 			},
 		],
 
