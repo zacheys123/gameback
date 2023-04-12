@@ -96,6 +96,7 @@ const UserSchema = mongoose.Schema(
 				},
 			},
 		],
+		theme: { type: Boolean, default: false },
 		secret: { type: String },
 		secret_question: { type: String },
 		tourn: { type: String },

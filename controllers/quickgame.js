@@ -17,8 +17,8 @@ export const createGame = async (req, res, next) => {
 	const matchno = /^[0-9]*$/;
 	try {
 		if (
-			req.body.player_data?.extra_data?.p1goals.match &&
-			req.body.player_data?.extra_data?.p2goals.match
+			req.body.player_data?.extra_data?.p1goals &&
+			req.body.player_data?.extra_data?.p2goals
 		) {
 			const newUser = await User.findById(req.params.id);
 			await newUser.updateOne({
@@ -48,7 +48,7 @@ export const createGame = async (req, res, next) => {
 
 			res.status(200).json({ message: 'Game Successfully Added' });
 		} else {
-			res.status(200).json({
+			res.status(400).json({
 				message: 'All fields are needed,Only tel no(optional)',
 			});
 		}
