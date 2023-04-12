@@ -158,7 +158,7 @@ export const update_pass = async (req, res) => {
 
 export const theme = async (req, res, next) => {
 	const { postdata, id } = req.body;
-
+	console.log(postdata);
 	try {
 		const user = await User.updateOne(
 			{ _id: req.params.id },
