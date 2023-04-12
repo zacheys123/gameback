@@ -5,6 +5,7 @@ import {
 	get_user,
 	update_plan,
 	update_pass,
+	theme,
 } from '../controllers/user_actions.js';
 import multer from 'multer';
 const upload = multer({ dest: 'uploads/' });
@@ -13,6 +14,7 @@ const router = express.Router();
 router.route('/update/:id').put(update_user);
 router.route('/package/:id').put(update_plan);
 router.route('/update_auth/:id').put(update_pass);
+router.route('/theme/:id').put(theme);
 router.route('/deleteuser').post(delete_user);
 router.route('/:id').get(get_user);
 

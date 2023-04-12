@@ -155,3 +155,23 @@ export const update_pass = async (req, res) => {
 		return res.status(403).json('Update your Account Only');
 	}
 };
+
+export const theme = async (req, res, next) => {
+	const { postdata, id } = req.body;
+
+	try {
+		const user = await User.updateOne(
+			{ _id: req.params.id },
+			{
+				$set: {
+					theme: postdata,
+				},
+			},
+		);
+		res.status(200).json({
+			result: user,
+		});
+	} catch (error) {
+		res.status(500).json(error);
+	}
+};
